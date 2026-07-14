@@ -16,16 +16,23 @@ object RaceSelectMenuPages {
             .racesConfigManager
             .races
 
-
         for ((id, race) in races) {
 
             if (id == "default") continue
 
+            val gui = race.raceGuiConfig
+
             pages += RacePage(
                 id = id,
-                displayName = race.raceGuiConfig.name ?: id,
-                lore = race.raceGuiConfig.lore ?: emptyList(),
-                material = Material.BOOK,
+                displayName = gui.name.ifEmpty { id },
+                lore = gui.lore
+                    .split("\\n")
+                    .map { it.replace("&", "§") },
+                material = try {
+                    Material.valueOf(gui.icon.uppercase())
+                } catch (e: Exception) {
+                    Material.BOOK
+                },
                 title = "race.$id"
             )
         }
