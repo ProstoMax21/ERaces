@@ -12,16 +12,19 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
 public class RacesConfigManager {
+
     private static final String FILE_NAME = "races.yml";
     private static final String DIRECTORY_NAME = "races.d";
 
     @Getter
-    public final Map<String, Race> races = new HashMap<>();
+    public final Map<String, Race> races = new LinkedHashMap<>();
 
     private final YamlManager cfgManager;
     private final JavaPlugin plugin;
@@ -32,7 +35,6 @@ public class RacesConfigManager {
         reloadConfig();
     }
 
-
     public void reloadConfig() {
         loadConfig();
         plugin.getLogger().info("Загружено: " + races.size() + " рас");
@@ -40,20 +42,30 @@ public class RacesConfigManager {
 
     private void loadConfig() {
         races.clear();
+
         Race defaultRace = new Race();
         defaultRace.setId("default");
         races.put("default", defaultRace);
+
         loadFromConfig(cfgManager.getConfig());
 
         File dir = new File(plugin.getDataFolder(), DIRECTORY_NAME);
+
         if (!dir.exists()) {
             boolean result = dir.mkdirs();
+
             if (!result) {
                 plugin.getLogger().severe("Не удалось создать папку races.d");
                 return;
             }
 
-            String[] defaults = {"elfs.yml", "humans.yml", "orks.yml", "furry.yml"}; // все файлы-шаблоны
+            String[] defaults = {
+                    "elfs.yml",
+                    "humans.yml",
+                    "orks.yml",
+                    "furry.yml"
+            };
+
             for (String f : defaults) {
                 try (InputStream in = plugin.getResource(DIRECTORY_NAME + "/" + f)) {
                     if (in != null) {
@@ -65,42 +77,88 @@ public class RacesConfigManager {
             }
         }
 
+
         if (dir.isDirectory()) {
-            File[] files = dir.listFiles((d, name) -> (name.endsWith(".yml") || name.endsWith(".yaml")));
+
+            File[] files = dir.listFiles(
+                    (d, name) -> name.endsWith(".yml") || name.endsWith(".yaml")
+            );
+
             if (files != null) {
+
+                // Сортировка файлов по имени
+                Arrays.sort(files, Comparator.comparing(File::getName));
+
                 for (File file : files) {
-                    plugin.getLogger().info("Загрузка конфига: " + file.getName());
-                    int racesLoaded = loadFromConfig(YamlConfiguration.loadConfiguration(file));
-                    plugin.getLogger().info("Из конфига: " + file.getName() + " загружено " + racesLoaded + " рас");
+
+                    plugin.getLogger().info(
+                            "Загрузка конфига: " + file.getName()
+                    );
+
+                    int racesLoaded = loadFromConfig(
+                            YamlConfiguration.loadConfiguration(file)
+                    );
+
+                    plugin.getLogger().info(
+                            "Из конфига: " + file.getName()
+                                    + " загружено "
+                                    + racesLoaded
+                                    + " рас"
+                    );
                 }
             }
         }
     }
 
+
     private int loadFromConfig(YamlConfiguration config) {
+
         int racesLoaded = 0;
+
         for (String key : config.getKeys(false)) {
-            ConfigurationSection section = config.getConfigurationSection(key);
+
+            ConfigurationSection section =
+                    config.getConfigurationSection(key);
+
             if (section == null) continue;
+
 
             Race race = new Race();
             race.setId(key);
 
+
             try {
+
                 ReflectionUtils.loadSection(race, section);
+
             } catch (Exception e) {
-                plugin.getLogger().log(Level.SEVERE, "[%s] race config failed to load".formatted(key), e);
+
+                plugin.getLogger().log(
+                        Level.SEVERE,
+                        "[%s] race config failed to load".formatted(key),
+                        e
+                );
+
                 continue;
             }
 
+
             if (races.containsKey(key)) {
-                plugin.getLogger().severe("Не удалось загрузить расу " + key + ", раса уже объявлена в другом конфиге");
+
+                plugin.getLogger().severe(
+                        "Не удалось загрузить расу "
+                                + key
+                                + ", раса уже объявлена в другом конфиге"
+                );
+
                 continue;
             }
+
 
             races.put(key, race);
             racesLoaded++;
         }
+
         return racesLoaded;
     }
 }
