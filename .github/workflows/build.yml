@@ -1,8 +1,9 @@
-name: Build Plugin
+name: Build ERaces
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -11,10 +12,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Build
-        run: ./gradlew build
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
 
-      - name: Upload jar
+      - name: Build
+        run: chmod +x gradlew && ./gradlew build
+
+      - name: Upload JAR
         uses: actions/upload-artifact@v4
         with:
           name: ERaces
