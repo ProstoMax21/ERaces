@@ -11,29 +11,36 @@ import dev.elysium.eraces.xpManager.XpManager
 import org.bukkit.Bukkit
 
 class ManagerInitializer : IInitializer {
+
     override fun setup(plugin: ERaces) {
         try {
             val ctx = plugin.context
 
+            // Перезагрузка конфигов
             RacesReloader.startListeners(plugin)
 
-            // Global config
-            val globalConfig = GlobalConfigManager(plugin)
-            ctx.globalConfigManager = globalConfig
+            // Глобальный конфиг
+            ctx.globalConfigManager = GlobalConfigManager(plugin)
 
-            // Races and player data
+            // Загрузка рас из races.yml и races.d
             ctx.racesConfigManager = RacesConfigManager(plugin)
 
-            // Загружаем GUI после загрузки всех рас из races.yml и races.d
-            RaceSelectMenuPages.loadFromConfig()
-
-            ctx.specializationsManager = SpecializationsManager(plugin, ctx.database)
+            // Данные игроков
             ctx.playerDataManager = PlayerDataManager(
                 ctx.racesConfigManager.races,
                 ctx.database
             )
 
-            // XP & Damage tracking
+            // Создание списка рас для GUI
+            RaceSelectMenuPages.loadFromConfig()
+
+            // Специализации
+            ctx.specializationsManager = SpecializationsManager(
+                plugin,
+                ctx.database
+            )
+
+            // Опыт и урон
             val xpManager = XpManager()
             Bukkit.getPluginManager().registerEvents(xpManager, plugin)
             ctx.xpManager = xpManager
@@ -42,10 +49,10 @@ class ManagerInitializer : IInitializer {
             Bukkit.getPluginManager().registerEvents(damageTracker, plugin)
             ctx.xpDamageTracker = damageTracker
 
-            // Mana
+            // Мана
             ctx.manaManager = ManaManager(plugin)
 
-            // Abilities Manager
+            // Способности
             AbilsManager.init(plugin)
 
         } catch (e: Exception) {
