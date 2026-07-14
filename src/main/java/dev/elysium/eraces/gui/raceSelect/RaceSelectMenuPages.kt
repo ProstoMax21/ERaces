@@ -24,15 +24,22 @@ object RaceSelectMenuPages {
 
             pages += RacePage(
                 id = id,
-                displayName = gui.name.ifEmpty { id },
+
+                displayName = gui.name
+                    .replace("&", "§")
+                    .ifEmpty { id },
+
                 lore = gui.lore
-                    .split("\\n")
+                    .replace("\\n", "\n")
+                    .split("\n")
                     .map { it.replace("&", "§") },
+
                 material = try {
                     Material.valueOf(gui.icon.uppercase())
                 } catch (e: Exception) {
                     Material.BOOK
                 },
+
                 title = "race.$id"
             )
         }
