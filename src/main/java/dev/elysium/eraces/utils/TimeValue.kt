@@ -118,7 +118,7 @@ class TimeValue(val milliseconds: Long, val input: String = "0s") {
                     totalMillis += convertToMillis(value, unitStr)
                     isValid = true
                 } else {
-                    val char = scanner.nextByte().toInt().toChar().toString()
+                    val char = scanner.next()[0].toString()
                     if (char != " ") {
                         ERaces.logger()
                             .warning("Внимание: Обнаружен и проигнорирован невалидный символ: '$char' в $cleanInput")
