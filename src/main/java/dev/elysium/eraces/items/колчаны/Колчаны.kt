@@ -53,7 +53,7 @@ open class Колчаны(
                 isHideTooltip = true
             }
         }
-        val currentArrows = ItemState(player.inventory.itemInMainHand).getInt(StateKeys.ARROWS_КОЛЧАН)
+        val currentArrows = ItemState(player.inventory.itemInMainHand).getInt(StateKeys.ARROWS_QUIVER)
 
         var remaining = currentArrows
         var slot = 0
