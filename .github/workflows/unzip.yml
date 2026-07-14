@@ -1,0 +1,43 @@
+name: Auto Unzip
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  unzip-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Unzip archives
+        run: |
+          mkdir -p unzipped
+          # Распаковываем все .zip из корня в папку unzipped
+          for zipfile in *.zip; do
+            if [ -f "$zipfile" ]; then
+              unzip -o "$zipfile" -d unzipped/
+            fi
+          done
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Добавляем распакованные файлы
+          git add unzipped/
+          
+          # Проверяем, есть ли изменения в индексе
+          if ! git diff --cached --exit-code; then
+            git commit -m "Auto-unzip: processed archives"
+            git push
+          else
+            echo "No changes to commit"
+          fi
+          
