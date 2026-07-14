@@ -63,7 +63,7 @@ class КолчаныListener: Listener {
                         count += item.amount
                     }
 
-                    ItemState(player.inventory.itemInMainHand).setInt(StateKeys.ARROWS_КОЛЧАН, count)
+                    ItemState(player.inventory.itemInMainHand).setInt(StateKeys.ARROWS_QUIVER, count)
                 }
             }.runTaskLater(ERaces.getInstance(), 1L)
 
