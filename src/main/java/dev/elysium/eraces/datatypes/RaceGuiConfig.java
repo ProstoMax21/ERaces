@@ -4,10 +4,13 @@ import lombok.Data;
 
 @Data
 public class RaceGuiConfig {
+
     @RaceProperty(path = "name")
-    String name = "name_undefined";
+    public String name = "name_undefined";
+
     @RaceProperty(path = "lore")
-    String lore = "";
+    public String lore = "";
+
     @RaceProperty(path = "icon")
-    String icon = "DIRT";
+    public String icon = "DIRT";
 }
