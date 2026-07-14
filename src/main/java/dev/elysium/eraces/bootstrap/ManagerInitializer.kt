@@ -15,7 +15,6 @@ class ManagerInitializer : IInitializer {
         try {
             val ctx = plugin.context
 
-            RaceSelectMenuPages.registerDefaults()
             RacesReloader.startListeners(plugin)
 
             // Global config
@@ -24,8 +23,15 @@ class ManagerInitializer : IInitializer {
 
             // Races and player data
             ctx.racesConfigManager = RacesConfigManager(plugin)
+
+            // Загружаем GUI после загрузки всех рас из races.yml и races.d
+            RaceSelectMenuPages.loadFromConfig()
+
             ctx.specializationsManager = SpecializationsManager(plugin, ctx.database)
-            ctx.playerDataManager = PlayerDataManager(ctx.racesConfigManager.races, ctx.database)
+            ctx.playerDataManager = PlayerDataManager(
+                ctx.racesConfigManager.races,
+                ctx.database
+            )
 
             // XP & Damage tracking
             val xpManager = XpManager()
@@ -39,10 +45,14 @@ class ManagerInitializer : IInitializer {
             // Mana
             ctx.manaManager = ManaManager(plugin)
 
-            // Abils Manager
+            // Abilities Manager
             AbilsManager.init(plugin)
+
         } catch (e: Exception) {
-            throw InitFailedException("Ошибка при инициализации менеджеров", e)
+            throw InitFailedException(
+                "Ошибка при инициализации менеджеров",
+                e
+            )
         }
     }
 }
