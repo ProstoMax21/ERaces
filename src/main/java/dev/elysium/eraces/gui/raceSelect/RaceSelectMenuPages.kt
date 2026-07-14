@@ -1,46 +1,38 @@
 package dev.elysium.eraces.gui.raceSelect
 
+import dev.elysium.eraces.ERaces
 import org.bukkit.Material
 
 object RaceSelectMenuPages {
 
     val pages = mutableListOf<RacePage>()
 
-    fun registerDefaults() {
-        if (pages.isNotEmpty()) return
+    fun loadFromConfig() {
 
-        pages += RacePage(
-            id = "elf",
-            displayName = "Эльф",
-            lore = listOf("Ловкий и быстрый", "Дружит с природой"),
-            material = Material.OAK_SAPLING,
-            title = "race.elf"
-        )
+        pages.clear()
 
-        pages += RacePage(
-            id = "ork",
-            displayName = "Орк",
-            lore = listOf("Сильный воин", "Ненавидит эльфов"),
-            material = Material.IRON_AXE,
-            title = "race.orc"
-        )
+        val races = ERaces.getInstance()
+            .context
+            .racesConfigManager
+            .races
 
-        pages += RacePage(
-            id = "human",
-            displayName = "Человек",
-            lore = listOf("Гибкий", "Умелый дипломат"),
-            material = Material.PLAYER_HEAD,
-            title = "race.human"
-        )
 
-        pages += RacePage(
-            id = "beastman",
-            displayName = "Зверолюд",
-            lore = listOf("Могущественный", "Пушистик"),
-            material = Material.BLAZE_POWDER,
-            title = "race.beastman"
-        )
+        for ((id, race) in races) {
+
+            if (id == "default") continue
+
+            pages += RacePage(
+                id = id,
+                displayName = race.raceGuiConfig.name ?: id,
+                lore = race.raceGuiConfig.lore ?: emptyList(),
+                material = Material.BOOK,
+                title = "race.$id"
+            )
+        }
     }
 
-    fun getById(id: String): RacePage? = pages.find { it.id == id }
+
+    fun getById(id: String): RacePage? {
+        return pages.find { it.id == id }
+    }
 }
