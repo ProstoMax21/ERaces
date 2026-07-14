@@ -12,38 +12,90 @@ import org.bukkit.inventory.InventoryHolder;
 import org.jetbrains.annotations.NotNull;
 
 public class RaceChangeGui implements InventoryHolder {
+
     private final Inventory inventory;
 
     public RaceChangeGui(Player player) {
-        int[] ids = {10, 12, 14, 16, 28, 30, 32, 34};
-        this.inventory = Bukkit.createInventory(this, 54, ChatUtil.INSTANCE.text(centerTitle("Выбор Расы"), NamedTextColor.DARK_PURPLE));
+
+        int[] ids = {
+                10, 12, 14, 16,
+                28, 30, 32, 34,
+                37, 39, 41, 43
+        };
+
+        this.inventory = Bukkit.createInventory(
+                this,
+                54,
+                ChatUtil.INSTANCE.text(
+                        centerTitle("Выбор Расы"),
+                        NamedTextColor.DARK_PURPLE
+                )
+        );
+
 
         var context = ERaces.getInstance().getContext();
-        Race currentRace = context.getPlayerDataManager().getPlayerRace(player);
+
+        Race currentRace =
+                context.getPlayerDataManager().getPlayerRace(player);
+
 
         int i = 0;
+
+
         for (Race r : context.getRacesConfigManager().getRaces().values()) {
+
+
+            // пропускаем техническую расу
+            if ("default".equals(r.getId()))
+                continue;
+
+
+            // если места закончились
+            if (i >= ids.length)
+                break;
+
+
             boolean selected = r == currentRace;
-            this.inventory.setItem(ids[i], RaceItems.getItem(r, selected));
+
+
+            this.inventory.setItem(
+                    ids[i],
+                    RaceItems.getItem(r, selected)
+            );
+
+
             i++;
         }
     }
 
 
     public static void open(Player player) {
-        player.openInventory(new RaceChangeGui(player).getInventory());
+        player.openInventory(
+                new RaceChangeGui(player).getInventory()
+        );
     }
 
+
     public static String centerTitle(String title) {
+
         int maxLength = 32;
         int spaceWidth = 2;
-        int titleLength = title.replaceAll("§.", "").length();
-        int spacesToAdd = (maxLength - titleLength) / spaceWidth;
-        return " ".repeat(Math.max(0, spacesToAdd)) + title;
+
+        int titleLength =
+                title.replaceAll("§.", "").length();
+
+        int spacesToAdd =
+                (maxLength - titleLength) / spaceWidth;
+
+
+        return " ".repeat(
+                Math.max(0, spacesToAdd)
+        ) + title;
     }
+
 
     @Override
     public @NotNull Inventory getInventory() {
-        return this.inventory;
+        return inventory;
     }
 }
