@@ -1,7 +1,5 @@
 package dev.elysium.eraces.gui.raceSelect
 
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.format.TextColor
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
@@ -12,18 +10,19 @@ data class RacePage(
     val material: Material,
     val title: String
 ) {
+
     fun toItem(): ItemStack {
-        return ItemStack(material).apply {
-            val meta = itemMeta ?: return@apply
 
-            meta.displayName(Component.text(displayName, TextColor.color(0xFFFF55)))
+        val item = ItemStack(material)
 
-            @Suppress("Deprecation")
-            meta.lore(lore?.map { Component.text(it, TextColor.color(0xAAAAAA)) })
+        val meta = item.itemMeta ?: return item
 
-            itemMeta = meta
-        }
+        meta.setDisplayName(displayName)
+
+        meta.lore = lore
+
+        item.itemMeta = meta
+
+        return item
     }
-
 }
-
