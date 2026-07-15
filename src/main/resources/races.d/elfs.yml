@@ -258,11 +258,11 @@ ancient_elf:
 
       # Связь с лесом
       - biomes:
-          - forest
-          - birch_forest
-          - taiga
-          - dark_forest
-          - flower_forest
+          - minecraft:forest
+          - minecraft:birch_forest
+          - minecraft:taiga
+          - minecraft:dark_forest
+          - minecraft:flower_forest
         effects:
           speed: 2
           regeneration: 1
@@ -270,8 +270,8 @@ ancient_elf:
 
       # Сила глубин
       - biomes:
-          - deep_dark
-          - pale_garden
+          - minecraft:deep_dark
+          - minecraft:pale_garden
         effects:
           night_vision: 1
 
@@ -279,7 +279,7 @@ ancient_elf:
     # Проклятие солнечного света
     at_light:
 
-      - light_type: "sky"
+      - light_type: "SKY"
         min: 12
         max: 15
         effects:
