@@ -5,132 +5,108 @@ import org.bukkit.Material
 
 object RaceSelectMenuPages {
 
-    val pages = mutableListOf<RaceCategory>()
-
+    val categories = mutableListOf<RaceCategory>()
 
     fun loadFromConfig() {
 
-        pages.clear()
-
+        categories.clear()
 
         val races = ERaces.getInstance()
             .context
             .racesConfigManager
             .races
-            .filter { it.key != "default" }
 
+        for ((id, race) in races) {
 
-        val grouped = races
-            .groupBy {
-                it.value.category ?: "other"
-            }
+            if (id == "default")
+                continue
 
+            val categoryId = race.category.ifBlank { "other" }
 
+            var category = categories.find { it.id == categoryId }
 
-        for ((categoryId, categoryRaces) in grouped) {
+            if (category == null) {
 
-
-            val list = mutableListOf<RacePage>()
-
-
-            val sorted = categoryRaces
-                .toList()
-                .sortedWith(
-                    compareBy {
-
-                        when(it.first) {
-
-                            // Эльфы
-                            "asir" -> 1
-                            "vaniar" -> 2
-                            "sun_elf" -> 3
-                            "elf" -> 4
-                            "dark_elf" -> 5
-                            "drow" -> 6
-                            "ancient_elf" -> 7
-
-
-                            // Остальные
-                            else -> 99
-                        }
-
+                category = RaceCategory(
+                    id = categoryId,
+                    displayName = categoryId.replaceFirstChar {
+                        it.uppercase()
                     }
                 )
 
-
-
-            for ((id, race) in sorted) {
-
-
-                val gui = race.raceGuiConfig
-
-
-                list += RacePage(
-
-                    id = id,
-
-
-                    displayName = gui.name
-                        .replace("&", "§")
-                        .ifEmpty {
-                            id
-                        },
-
-
-                    lore = gui.lore
-                        .replace("\\n", "\n")
-                        .split("\n")
-                        .map {
-                            it.replace("&", "§")
-                        },
-
-
-                    material = try {
-
-                        Material.valueOf(
-                            gui.icon.uppercase()
-                        )
-
-                    } catch (e: Exception) {
-
-                        Material.BOOK
-
-                    },
-
-
-                    title = "race.$id"
-                )
+                categories += category
             }
 
+            val gui = race.raceGuiConfig
 
+            category.races += RacePage(
+                id = id,
 
-            pages += RaceCategory(
-                id = categoryId,
-                name = when(categoryId) {
+                displayName = gui.name
+                    .replace("&", "§")
+                    .ifEmpty { id },
 
-                    "elf" -> "Эльфы"
-                    "human" -> "Люди"
-                    "orc" -> "Орки"
-                    "furry" -> "Зверолюди"
+                lore = gui.lore
+                    .replace("\\n", "\n")
+                    .split("\n")
+                    .map { it.replace("&", "§") },
 
-                    else -> categoryId
+                material = try {
+                    Material.valueOf(gui.icon.uppercase())
+                } catch (_: Exception) {
+                    Material.BOOK
                 },
 
-                races = list
+                title = "race.$id"
             )
         }
+
+        // Красивый порядок категорий
+        categories.sortBy {
+
+            when (it.id.lowercase()) {
+                "elf" -> 0
+                "human" -> 1
+                "orc" -> 2
+                "furry" -> 3
+                else -> 99
+            }
+
+        }
+
+        // Сортировка рас внутри категории
+        categories.forEach { category ->
+
+            category.races.sortBy {
+
+                when (it.id) {
+
+                    // Эльфы
+                    "asir" -> 1
+                    "vaniar" -> 2
+                    "sun_elf" -> 3
+                    "elf" -> 4
+                    "dark_elf" -> 5
+                    "drow" -> 6
+                    "ancient_elf" -> 7
+
+                    else -> 999
+
+                }
+
+            }
+
+        }
+
     }
 
+    fun getCategory(index: Int): RaceCategory? {
 
+        if (index < 0 || index >= categories.size)
+            return null
 
-    fun getById(id: String): RacePage? {
+        return categories[index]
 
-        return pages
-            .flatMap {
-                it.races
-            }
-            .find {
-                it.id == id
-            }
     }
+
 }
