@@ -1,5 +1,6 @@
 package dev.elysium.eraces.gui.raceSelect
 
+import dev.elysium.eraces.utils.ChatUtil
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
@@ -11,15 +12,26 @@ data class RacePage(
     val title: String
 ) {
 
+    fun getColoredName(): String {
+        return ChatUtil.toMiniMessage(displayName)
+    }
+
+
     fun toItem(): ItemStack {
 
         val item = ItemStack(material)
 
         val meta = item.itemMeta ?: return item
 
-        meta.setDisplayName(displayName)
+        meta.displayName(
+            ChatUtil.parse(displayName)
+        )
 
-        meta.lore = lore
+        meta.lore(
+            lore.map {
+                ChatUtil.parse(it)
+            }
+        )
 
         item.itemMeta = meta
 
