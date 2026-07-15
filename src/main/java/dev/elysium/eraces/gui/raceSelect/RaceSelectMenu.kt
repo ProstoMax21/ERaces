@@ -2,14 +2,16 @@ package dev.elysium.eraces.gui.raceSelect
 
 import dev.elysium.eraces.gui.core.GuiBase
 import dev.elysium.eraces.gui.core.GuiButton
-import dev.elysium.eraces.gui.core.GuiManager
 import dev.elysium.eraces.utils.ChatUtil
 import org.bukkit.Material
 import org.bukkit.entity.Player
 
+
 class RaceSelectMenu(player: Player) : GuiBase(player, "Выбор расы") {
 
-    private var currentIndex = 0
+
+    private var currentCategory = 0
+
 
     init {
         preventClose = true
@@ -17,21 +19,27 @@ class RaceSelectMenu(player: Player) : GuiBase(player, "Выбор расы") {
     }
 
 
+
     override fun setup() {
 
-        val pages = RaceSelectMenuPages.pages
+
+        val categories = RaceSelectMenuPages.pages
 
 
-        // Загружаем расы из races.d, если список пуст
-        if (pages.isEmpty()) {
+
+        if (categories.isEmpty()) {
+
             RaceSelectMenuPages.loadFromConfig()
+
         }
 
 
-        if (pages.isEmpty()) {
+
+        if (categories.isEmpty()) {
+
             ChatUtil.message(
                 player,
-                "<red>Ошибка: список рас пуст. Проверь races.yml и races.d!"
+                "<red>Ошибка: список категорий рас пуст!"
             )
 
             player.closeInventory()
@@ -39,76 +47,118 @@ class RaceSelectMenu(player: Player) : GuiBase(player, "Выбор расы") {
         }
 
 
+
         clearButtons()
 
 
-        if (currentIndex < 0)
-            currentIndex = 0
 
-        if (currentIndex >= pages.size)
-            currentIndex = pages.size - 1
+        if (currentCategory < 0)
+            currentCategory = 0
 
 
-        val race = pages[currentIndex]
+
+        if (currentCategory >= categories.size)
+            currentCategory = categories.size - 1
 
 
-        // Центральная кнопка с расой
+
+        val category = categories[currentCategory]
+
+
+
+        // Заголовок категории
+
         setButton(
-            22,
-            GuiButton(race.toItem()) {
-            }
-        )
-
-
-        // Выбор расы
-        setButton(
-            31,
+            4,
             GuiButton.of(
-                Material.EMERALD_BLOCK,
-                "<green>Выбрать расу"
-            ) {
-
-                preventClose = false
-
-                GuiManager.close(player)
-                player.closeInventory()
-
-                RaceConfirmMenu(player, race).open()
-            }
+                Material.NETHER_STAR,
+                "<gold>${category.name}"
+            ) {}
         )
 
 
-        // Назад
-        if (currentIndex > 0) {
+
+        // Расстановка рас
+
+        var slot = 10
+
+
+        for (race in category.races) {
+
+
+            while (
+                slot == 17 ||
+                slot == 26 ||
+                slot == 35
+            ) {
+                slot++
+            }
+
+
+
+            setButton(
+                slot,
+                GuiButton(race.toItem()) {
+
+                    RaceConfirmMenu(
+                        player,
+                        race
+                    ).open()
+
+                }
+            )
+
+
+            slot++
+
+        }
+
+
+
+
+        // Предыдущая категория
+
+        if (currentCategory > 0) {
+
 
             setButton(
                 45,
                 GuiButton.of(
                     Material.ARROW,
-                    "<yellow>Предыдущая"
+                    "<yellow>Предыдущая категория"
                 ) {
 
-                    currentIndex--
+                    currentCategory--
                     open()
+
                 }
             )
+
         }
 
 
-        // Вперёд
-        if (currentIndex < pages.size - 1) {
+
+
+        // Следующая категория
+
+        if (currentCategory < categories.size - 1) {
+
 
             setButton(
                 53,
                 GuiButton.of(
                     Material.ARROW,
-                    "<yellow>Следующая"
+                    "<yellow>Следующая категория"
                 ) {
 
-                    currentIndex++
+                    currentCategory++
                     open()
+
                 }
             )
+
         }
+
     }
+
 }
