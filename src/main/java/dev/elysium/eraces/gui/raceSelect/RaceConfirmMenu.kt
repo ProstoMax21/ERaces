@@ -16,7 +16,6 @@ class RaceConfirmMenu(
     private val race: RacePage
 ) : GuiBase(player, "Подтверждение выбора", 27) {
 
-
     init {
         preventClose = true
         closeMessage = "<red>Ты должен выбрать расу, прежде чем продолжить!"
@@ -25,31 +24,23 @@ class RaceConfirmMenu(
 
     override fun setup() {
 
-
         setButton(
             11,
             GuiButton.of(
                 Material.LIME_WOOL,
-                "<green>Да, выбрать <gold>${race.name}"
+                "<green>Да, выбрать <gold>${cleanName(race.displayName)}"
             ) {
-
 
                 val plugin = ERaces.getInstance()
 
-
                 player.actionMsg(
-                    "<green>Ты выбрал расу: <gold>${race.name}"
+                    "<green>Ты выбрал расу: <gold>${cleanName(race.displayName)}"
                 )
 
 
-                plugin.context
-                    .playerDataManager
-                    .setPlayerRaceAsync(
-                        player,
-                        race.id
-                    )
+                plugin.context.playerDataManager
+                    .setPlayerRaceAsync(player, race.id)
                     .thenRun {
-
 
                         Bukkit.getScheduler().runTask(
                             plugin,
@@ -79,16 +70,12 @@ class RaceConfirmMenu(
                 "<red>Нет, вернуться"
             ) {
 
-
                 GuiManager.close(player)
-
 
                 Bukkit.getScheduler().runTaskLater(
                     ERaces.getInstance(),
                     Runnable {
-
                         RaceSelectMenu(player).open()
-
                     },
                     1L
                 )
@@ -98,78 +85,9 @@ class RaceConfirmMenu(
 
     }
 
-}
 
-                val plugin = ERaces.getInstance()
-
-
-                player.actionMsg(
-                    "<green>Ты выбрал расу: <gold>${race.displayName}"
-                )
-
-
-                // Сохраняем расу
-
-                plugin.context
-                    .playerDataManager
-                    .setPlayerRaceAsync(
-                        player,
-                        race.id
-                    )
-                    .thenRun {
-
-
-                        Bukkit.getScheduler().runTask(
-                            plugin,
-                            Runnable {
-
-
-                                RacesReloader.reloadRaceForPlayer(player)
-
-                                VisualsManager.updateVisualsForPlayer(player)
-
-
-                                GuiManager.close(player)
-
-                                player.closeInventory()
-
-
-                            }
-                        )
-
-                    }
-
-            }
-        )
-
-
-
-        // Отмена
-
-        setButton(
-            15,
-            GuiButton.of(
-                Material.RED_WOOL,
-                "<red>Нет, вернуться"
-            ) {
-
-
-                GuiManager.close(player)
-
-
-                Bukkit.getScheduler().runTaskLater(
-                    ERaces.getInstance(),
-                    Runnable {
-
-                        RaceSelectMenu(player).open()
-
-                    },
-                    1L
-                )
-
-            }
-        )
-
+    private fun cleanName(text: String): String {
+        return text.replace(Regex("§[0-9a-fk-or]"), "")
     }
 
 }
