@@ -7,7 +7,7 @@ import org.bukkit.entity.Player
  */
 object GuiManager {
 
-    private val openMenus = mutableMapOf<String, GuiBase>()
+    private val openMenus = mutableMapOf<UUID, GuiBase>()
 
     fun getOpenMenu(player: Player): GuiBase? = openMenus[player.name]
 
