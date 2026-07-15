@@ -6,6 +6,7 @@ import dev.elysium.eraces.listeners.GuiListener
 import dev.elysium.eraces.listeners.PluginMessageListener
 import dev.elysium.eraces.listeners.RaceSelectListener
 import dev.elysium.eraces.listeners.RaceEffectListener
+import dev.elysium.eraces.listeners.RaceDamageListener
 import org.bukkit.Bukkit
 
 class ListenerInitializer : IInitializer {
@@ -36,6 +37,9 @@ class ListenerInitializer : IInitializer {
 
             Bukkit.getPluginManager()
                 .registerEvents(RaceEffectListener, plugin)
+
+            Bukkit.getPluginManager()
+                .registerEvents(RaceDamageListener, plugin)
 
         } catch (e: Exception) {
             throw InitFailedException(
