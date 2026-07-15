@@ -16,6 +16,7 @@ class RaceConfirmMenu(
     private val race: RacePage
 ) : GuiBase(player, "Подтверждение выбора", 27) {
 
+
     init {
         preventClose = true
         closeMessage = "<red>Ты должен выбрать расу, прежде чем продолжить!"
@@ -25,7 +26,8 @@ class RaceConfirmMenu(
     override fun setup() {
 
 
-        // Да, выбрать расу
+        // Подтвердить выбор
+
         setButton(
             11,
             GuiButton.of(
@@ -33,39 +35,53 @@ class RaceConfirmMenu(
                 "<green>Да, выбрать ${race.displayName}"
             ) {
 
-                preventClose = false
 
-                GuiManager.close(player)
+                val plugin = ERaces.getInstance()
+
 
                 player.actionMsg(
                     "<green>Ты выбрал расу: <gold>${race.displayName}"
                 )
 
 
-                ERaces.getInstance()
-                    .context
+                // Сохраняем расу
+
+                plugin.context
                     .playerDataManager
-                    .setPlayerRaceAsync(player, race.id)
+                    .setPlayerRaceAsync(
+                        player,
+                        race.id
+                    )
                     .thenRun {
 
+
                         Bukkit.getScheduler().runTask(
-                            ERaces.getInstance(),
+                            plugin,
                             Runnable {
+
 
                                 RacesReloader.reloadRaceForPlayer(player)
 
                                 VisualsManager.updateVisualsForPlayer(player)
 
+
+                                GuiManager.close(player)
+
                                 player.closeInventory()
+
 
                             }
                         )
+
                     }
+
             }
         )
 
 
-        // Нет, назад
+
+        // Отмена
+
         setButton(
             15,
             GuiButton.of(
@@ -73,7 +89,6 @@ class RaceConfirmMenu(
                 "<red>Нет, вернуться"
             ) {
 
-                preventClose = false
 
                 GuiManager.close(player)
 
@@ -87,7 +102,10 @@ class RaceConfirmMenu(
                     },
                     1L
                 )
+
             }
         )
+
     }
+
 }
