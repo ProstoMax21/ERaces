@@ -12,11 +12,6 @@ data class RacePage(
     val title: String
 ) {
 
-    fun getColoredName(): String {
-        return ChatUtil.toMiniMessage(displayName)
-    }
-
-
     fun toItem(): ItemStack {
 
         val item = ItemStack(material)
