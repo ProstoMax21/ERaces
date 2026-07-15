@@ -14,6 +14,7 @@ import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 
 object RacesReloader : Listener {
+
     private val listeners: List<Listener> = listOf(
         PlayerJoinListener(),
         PlayerQuitListener(),
@@ -24,31 +25,54 @@ object RacesReloader : Listener {
     )
 
     fun reloadRaceForPlayer(player: Player) {
-        val race = getInstance().context.playerDataManager.getPlayerRace(player) ?: return
+
+        val raceId = getInstance()
+            .context
+            .playerDataManager
+            .getPlayerRaceId(player)
+
+        if (raceId.isNullOrEmpty() || raceId == "default") {
+            return
+        }
+
+        val race = getInstance()
+            .context
+            .racesConfigManager
+            .races[raceId]
+            ?: return
 
         reloadUpdatersForPlayer(player, race)
         sendAbilities(player)
     }
 
+
     fun reloadRaceForAllPlayers() {
-        for (i in Bukkit.getOnlinePlayers())
-            reloadRaceForPlayer(i)
+        for (player in Bukkit.getOnlinePlayers()) {
+            reloadRaceForPlayer(player)
+        }
     }
+
 
     fun startListeners(plugin: JavaPlugin) {
+
         registerUpdatersListeners(plugin)
 
-        for (obj in listeners)
-            Bukkit.getPluginManager().registerEvents(obj, plugin)
+        for (listener in listeners) {
+            Bukkit.getPluginManager().registerEvents(listener, plugin)
+        }
     }
+
 
     fun onPlayerLeave(player: Player) {
         unloadPlayerDataFromUpdaters(player)
         disableUpdatersForPlayers(player)
     }
 
+
     fun disableUpdaters() {
-        for (i in Bukkit.getOnlinePlayers())
-            disableUpdatersForPlayers(i)
+
+        for (player in Bukkit.getOnlinePlayers()) {
+            disableUpdatersForPlayers(player)
+        }
     }
 }
