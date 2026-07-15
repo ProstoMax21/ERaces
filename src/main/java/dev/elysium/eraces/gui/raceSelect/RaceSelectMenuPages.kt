@@ -16,29 +16,68 @@ object RaceSelectMenuPages {
             .racesConfigManager
             .races
 
-        for ((id, race) in races) {
 
-            if (id == "default") continue
+        val sortedRaces = races
+            .filter { it.key != "default" }
+            .toList()
+            .sortedWith(
+                compareBy(
+                    // Сначала категория
+                    { it.second.category ?: "zzz" },
+
+                    // Потом порядок внутри категории
+                    {
+                        when (it.first) {
+
+                            // Эльфы
+                            "asir" -> 1
+                            "vaniar" -> 2
+                            "sun_elf" -> 3
+                            "elf" -> 4
+                            "dark_elf" -> 5
+                            "drow" -> 6
+                            "ancient_elf" -> 7
+
+                            // Остальные
+                            else -> 99
+                        }
+                    }
+                )
+            )
+
+
+        for ((id, race) in sortedRaces) {
 
             val gui = race.raceGuiConfig
 
+
             pages += RacePage(
+
                 id = id,
 
                 displayName = gui.name
                     .replace("&", "§")
                     .ifEmpty { id },
 
+
                 lore = gui.lore
                     .replace("\\n", "\n")
                     .split("\n")
                     .map { it.replace("&", "§") },
 
+
                 material = try {
-                    Material.valueOf(gui.icon.uppercase())
+
+                    Material.valueOf(
+                        gui.icon.uppercase()
+                    )
+
                 } catch (e: Exception) {
+
                     Material.BOOK
+
                 },
+
 
                 title = "race.$id"
             )
@@ -47,6 +86,10 @@ object RaceSelectMenuPages {
 
 
     fun getById(id: String): RacePage? {
-        return pages.find { it.id == id }
+
+        return pages.find {
+            it.id == id
+        }
+
     }
 }
