@@ -26,15 +26,79 @@ class RaceConfirmMenu(
     override fun setup() {
 
 
-        // Подтвердить выбор
-
         setButton(
             11,
             GuiButton.of(
                 Material.LIME_WOOL,
-                "<green>Да, выбрать ${race.displayName}"
+                "<green>Да, выбрать <gold>${race.name}"
             ) {
 
+
+                val plugin = ERaces.getInstance()
+
+
+                player.actionMsg(
+                    "<green>Ты выбрал расу: <gold>${race.name}"
+                )
+
+
+                plugin.context
+                    .playerDataManager
+                    .setPlayerRaceAsync(
+                        player,
+                        race.id
+                    )
+                    .thenRun {
+
+
+                        Bukkit.getScheduler().runTask(
+                            plugin,
+                            Runnable {
+
+                                RacesReloader.reloadRaceForPlayer(player)
+
+                                VisualsManager.updateVisualsForPlayer(player)
+
+                                GuiManager.close(player)
+
+                                player.closeInventory()
+
+                            }
+                        )
+
+                    }
+
+            }
+        )
+
+
+        setButton(
+            15,
+            GuiButton.of(
+                Material.RED_WOOL,
+                "<red>Нет, вернуться"
+            ) {
+
+
+                GuiManager.close(player)
+
+
+                Bukkit.getScheduler().runTaskLater(
+                    ERaces.getInstance(),
+                    Runnable {
+
+                        RaceSelectMenu(player).open()
+
+                    },
+                    1L
+                )
+
+            }
+        )
+
+    }
+
+}
 
                 val plugin = ERaces.getInstance()
 
