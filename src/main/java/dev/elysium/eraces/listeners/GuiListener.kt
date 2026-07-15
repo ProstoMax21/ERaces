@@ -11,85 +11,127 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerQuitEvent
 
+
 /**
  * Слушатель событий для GUI-меню.
  */
 object GuiListener : Listener {
 
+
     lateinit var plugin: ERaces
+
 
     fun init(plugin: ERaces) {
         this.plugin = plugin
     }
 
+
+
     /**
-     * Обрабатывает клики по элементам меню.
+     * Обрабатывает клики по GUI.
      */
     @EventHandler(priority = EventPriority.HIGH)
     fun onInventoryClick(event: InventoryClickEvent) {
 
-        val player = event.whoClicked as? Player ?: return
 
-        val menu = GuiManager.getOpenMenu(player) ?: return
+        val player = event.whoClicked as? Player
+            ?: return
 
-        // Игнорируем клики вне открытого GUI
-        if (event.inventory != menu.inv) {
+
+        val menu = GuiManager.getOpenMenu(player)
+            ?: return
+
+
+
+        // Проверяем именно верхний инвентарь GUI
+        if (event.view.topInventory != menu.inv) {
             return
         }
 
+
+
         event.isCancelled = true
 
+
         menu.handleClick(event)
+
     }
 
 
+
+
     /**
-     * Убирает меню из менеджера при закрытии инвентаря.
+     * Обрабатывает закрытие GUI.
      */
     @EventHandler(priority = EventPriority.HIGH)
     fun onInventoryClose(event: InventoryCloseEvent) {
 
-        val player = event.player as? Player ?: return
 
-        val menu = GuiManager.getOpenMenu(player) ?: return
+        val player = event.player as? Player
+            ?: return
 
 
+        val menu = GuiManager.getOpenMenu(player)
+            ?: return
+
+
+
+        // Если меню было открыто заново
         if (menu.isReopened) {
+
             menu.isReopened = false
             return
+
         }
 
 
+
+        // Запрет закрытия
         if (menu.preventClose) {
 
+
             menu.closeMessage?.let {
+
                 player.actionMsg(it)
+
             }
+
 
 
             player.server.scheduler.runTaskLater(
                 plugin,
                 Runnable {
+
                     menu.open(true)
+
                 },
                 1L
             )
 
+
+
         } else {
+
 
             GuiManager.close(player)
 
         }
+
     }
 
 
+
+
+
     /**
-     * Закрывает GUI после выхода игрока.
+     * Очистка после выхода игрока.
      */
     @EventHandler(priority = EventPriority.HIGH)
     fun onPlayerLeave(event: PlayerQuitEvent) {
 
+
         GuiManager.close(event.player)
 
     }
+
 }
