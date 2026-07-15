@@ -3,6 +3,9 @@ package dev.elysium.eraces.datatypes
 class Race {
     var id: String? = null
 
+    @RaceProperty(path = "category", type = FieldType.STRING)
+    var category: String = "other"
+
     @RaceProperty(path = "max_hp", type = FieldType.DOUBLE)
     var maxHp: Double = 20.0
 
@@ -65,7 +68,7 @@ class Race {
     var abilities: MutableList<String> = mutableListOf()
 
     @RaceProperty(path = "mana_regeneration_modifiers", type = FieldType.LIST_SUBGROUP)
-    var manaRegenModifiers:  MutableList<ConditionalModifier> = mutableListOf()
+    var manaRegenModifiers: MutableList<ConditionalModifier> = mutableListOf()
 
     @RaceProperty(path = "clumsiness_chance", type = FieldType.SUBGROUP)
     var clumsinessChance: ClumsinessChance = ClumsinessChance()
