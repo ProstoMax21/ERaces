@@ -5,29 +5,40 @@ import org.bukkit.Material
 
 object RaceSelectMenuPages {
 
-    val pages = mutableListOf<RacePage>()
+    val pages = mutableListOf<RaceCategory>()
+
 
     fun loadFromConfig() {
 
         pages.clear()
 
+
         val races = ERaces.getInstance()
             .context
             .racesConfigManager
             .races
-
-
-        val sortedRaces = races
             .filter { it.key != "default" }
-            .toList()
-            .sortedWith(
-                compareBy(
-                    // Сначала категория
-                    { it.second.category ?: "zzz" },
 
-                    // Потом порядок внутри категории
-                    {
-                        when (it.first) {
+
+        val grouped = races
+            .groupBy {
+                it.value.category ?: "other"
+            }
+
+
+
+        for ((categoryId, categoryRaces) in grouped) {
+
+
+            val list = mutableListOf<RacePage>()
+
+
+            val sorted = categoryRaces
+                .toList()
+                .sortedWith(
+                    compareBy {
+
+                        when(it.first) {
 
                             // Эльфы
                             "asir" -> 1
@@ -38,58 +49,88 @@ object RaceSelectMenuPages {
                             "drow" -> 6
                             "ancient_elf" -> 7
 
+
                             // Остальные
                             else -> 99
                         }
+
                     }
                 )
-            )
 
 
-        for ((id, race) in sortedRaces) {
 
-            val gui = race.raceGuiConfig
-
-
-            pages += RacePage(
-
-                id = id,
-
-                displayName = gui.name
-                    .replace("&", "§")
-                    .ifEmpty { id },
+            for ((id, race) in sorted) {
 
 
-                lore = gui.lore
-                    .replace("\\n", "\n")
-                    .split("\n")
-                    .map { it.replace("&", "§") },
+                val gui = race.raceGuiConfig
 
 
-                material = try {
+                list += RacePage(
 
-                    Material.valueOf(
-                        gui.icon.uppercase()
-                    )
+                    id = id,
 
-                } catch (e: Exception) {
 
-                    Material.BOOK
+                    displayName = gui.name
+                        .replace("&", "§")
+                        .ifEmpty {
+                            id
+                        },
 
+
+                    lore = gui.lore
+                        .replace("\\n", "\n")
+                        .split("\n")
+                        .map {
+                            it.replace("&", "§")
+                        },
+
+
+                    material = try {
+
+                        Material.valueOf(
+                            gui.icon.uppercase()
+                        )
+
+                    } catch (e: Exception) {
+
+                        Material.BOOK
+
+                    },
+
+
+                    title = "race.$id"
+                )
+            }
+
+
+
+            pages += RaceCategory(
+                id = categoryId,
+                name = when(categoryId) {
+
+                    "elf" -> "Эльфы"
+                    "human" -> "Люди"
+                    "orc" -> "Орки"
+                    "furry" -> "Зверолюди"
+
+                    else -> categoryId
                 },
 
-
-                title = "race.$id"
+                races = list
             )
         }
     }
 
 
+
     fun getById(id: String): RacePage? {
 
-        return pages.find {
-            it.id == id
-        }
-
+        return pages
+            .flatMap {
+                it.races
+            }
+            .find {
+                it.id == id
+            }
     }
 }
