@@ -15,57 +15,49 @@ object RaceSelectListener : Listener {
 
     @EventHandler
     fun onPlayerJoin(event: PlayerJoinEvent) {
-        val player = event.player
-        val raceId = ERaces.getInstance().context.playerDataManager.getPlayerRaceId(player)
-        val defaultRaceId = "default"
 
-        if (raceId.isNullOrEmpty() || raceId == defaultRaceId) {
-            val menu = RaceSelectMenu(player)
-            menu.open()
-        } else {
-            RacesReloader.reloadRaceForPlayer(player)
-            VisualsManager.updateVisualsForPlayer(player)
-        }
+        val player = event.player
+
+        ERaces.getInstance().server.scheduler.runTaskLater(
+            ERaces.getInstance(),
+            Runnable {
+
+                if (!player.isOnline) return@Runnable
+
+                val raceId = ERaces.getInstance()
+                    .context
+                    .playerDataManager
+                    .getPlayerRaceId(player)
+
+                if (raceId.isNullOrEmpty() || raceId == "default") {
+
+                    RaceSelectMenu(player).open()
+
+                } else {
+
+                    RacesReloader.reloadRaceForPlayer(player)
+                    VisualsManager.updateVisualsForPlayer(player)
+
+                }
+
+            },
+            20L
+        )
     }
 
 
     @EventHandler
     fun onPlayerDamage(event: EntityDamageEvent) {
-        val player = event.entity
-        if (player is Player) {
-            val menu = GuiManager.getOpenMenu(player)
+
+        val entity = event.entity
+
+        if (entity is Player) {
+
+            val menu = GuiManager.getOpenMenu(entity)
+
             if (menu?.preventClose == true) {
                 event.isCancelled = true
             }
         }
     }
-
-//    @EventHandler
-//    fun onClick(e: InventoryClickEvent) {
-//        val player = e.whoClicked as Player
-//        val menu = openMenus[player.name] ?: return
-//
-//        when (e.view.title) {
-//            "Подтверждение выбора" -> menu.handleConfirmClick(e)
-//            else -> menu.handleClick(e)
-//        }
-//
-//        val raceId = ERaces.getPlayerMng().getPlayerRaceId(player)
-//        if (!raceId.isNullOrEmpty()) {
-//            openMenus.remove(player.name)
-//            selectingRace.remove(player.name)
-//            RacesReloader.reloadRaceForPlayer(player)
-//            VisualsManager.updateVisualsForPlayer(player)
-//        }
-//    }
-
-//    @EventHandler
-//    fun onClose(e: InventoryCloseEvent) {
-//        val player = e.player as Player
-//        if (openMenus.containsKey(player.name)) {
-//            ChatUtil.sendAction(player, "<red>Ты должен выбрать расу, прежде чем продолжить!")
-//            openMenus[player.name]?.open()
-//        }
-//    }
-
 }
