@@ -171,6 +171,14 @@ dark_elf:
         effects:
           speed: 2
           regeneration: 1
+          
+  at_light:
+  - light_type: "sky"
+    min: 10
+    max: 15
+    effects:
+      slowness: 1
+      weakness: 1
 
   weapon_proficiency:
     sword_damage_multiplier: 1.1
@@ -202,6 +210,15 @@ drow:
         effects:
           speed: 3
           regeneration: 2
+
+    at_light:
+      - light_type: "sky"
+        min: 12
+        max: 15
+        effects:
+          slowness: 2
+          weakness: 1
+          
 
   weapon_proficiency:
     bow_damage_multiplier: 1.25
