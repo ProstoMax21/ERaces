@@ -21,48 +21,73 @@ class RaceConfirmMenu(
         closeMessage = "<red>Ты должен выбрать расу, прежде чем продолжить!"
     }
 
+
     override fun setup() {
 
-        setButton(11, GuiButton.of(Material.LIME_WOOL, "<green>Да, выбрать ${race.displayName}") {
 
-            GuiManager.getOpenMenu(player)?.preventClose = false
-            GuiManager.close(player)
+        // Да, выбрать расу
+        setButton(
+            11,
+            GuiButton.of(
+                Material.LIME_WOOL,
+                "<green>Да, выбрать ${race.displayName}"
+            ) {
 
-            player.actionMsg("<green>Ты выбрал расу: <gold>${race.displayName}")
+                preventClose = false
 
-            ERaces.getInstance()
-                .context
-                .playerDataManager
-                .setPlayerRaceAsync(player, race.id)
-                .thenRun {
+                GuiManager.close(player)
 
-                    Bukkit.getScheduler().runTask(
-                        ERaces.getInstance(),
-                        Runnable {
-
-                            RacesReloader.reloadRaceForPlayer(player)
-                            VisualsManager.updateVisualsForPlayer(player)
-
-                            player.closeInventory()
-                        }
-                    )
-                }
-        })
+                player.actionMsg(
+                    "<green>Ты выбрал расу: <gold>${race.displayName}"
+                )
 
 
-        setButton(15, GuiButton.of(Material.RED_WOOL, "<red>Нет, вернуться") {
+                ERaces.getInstance()
+                    .context
+                    .playerDataManager
+                    .setPlayerRaceAsync(player, race.id)
+                    .thenRun {
 
-            GuiManager.getOpenMenu(player)?.preventClose = false
-            GuiManager.close(player)
+                        Bukkit.getScheduler().runTask(
+                            ERaces.getInstance(),
+                            Runnable {
 
-            Bukkit.getScheduler().runTaskLater(
-                ERaces.getInstance(),
-                Runnable {
-                    player.closeInventory()
-                    RaceSelectMenu(player).open()
-                },
-                1L
-            )
-        })
+                                RacesReloader.reloadRaceForPlayer(player)
+
+                                VisualsManager.updateVisualsForPlayer(player)
+
+                                player.closeInventory()
+
+                            }
+                        )
+                    }
+            }
+        )
+
+
+        // Нет, назад
+        setButton(
+            15,
+            GuiButton.of(
+                Material.RED_WOOL,
+                "<red>Нет, вернуться"
+            ) {
+
+                preventClose = false
+
+                GuiManager.close(player)
+
+
+                Bukkit.getScheduler().runTaskLater(
+                    ERaces.getInstance(),
+                    Runnable {
+
+                        RaceSelectMenu(player).open()
+
+                    },
+                    1L
+                )
+            }
+        )
     }
 }
