@@ -229,9 +229,10 @@ drow:
 
 
 
-gentleman:
+ancient_elf:
   gui_config:
-    name: "Эльф дворянин"
+    name: "Эльф кровавой луны"
+    "
     lore: ""
     icon: "MACE"
   max_hp: 14
@@ -239,9 +240,7 @@ gentleman:
   effects_with:
     in_biome:
       - biomes:
-          - forest
-          - birch_forest
-          - taiga
+      
         effects:
           speed: 2
           regeneration: 1
@@ -261,47 +260,6 @@ gentleman:
     bow_damage_multiplier: 1.15
     bow_projectile_speed_multiplier: 1.15
 
-  #Способности:
-  #
-  #Дух леса:
-  #КД- 10 минут
-  #Длительность: 2 минуты
-  #При использование, наклыдывает на владельца:
-  #Регенерация 2
-  #Ночное зрение
-  #Сопротивление 1
-
-true_blood_elf:
-  gui_config:
-    name: "Эльф истинной крови"
-    lore: ""
-    icon: "MACE"
-  max_hp: 16
-  exclude_from_random: true
-  effects_with:
-    in_biome:
-      - biomes:
-          - forest
-          - birch_forest
-          - taiga
-        effects:
-          speed: 2
-          regeneration: 1
-      - biomes:
-          - deep_dark
-          - pale_garden
-          - dark_forest
-        effects:
-          nausea: 1
-          blindness: 1
-  forbidden_foods:
-    - COOKED_BEEF
-    - COOKED_PORK
-    - COOKED_MUTTON
-    - COOKED_CHICKEN
-  weapon_proficiency:
-    bow_damage_multiplier: 1.25
-    bow_projectile_speed_multiplier: 1.25
 
   #Способности:
   #
@@ -319,144 +277,4 @@ true_blood_elf:
   #При использование владелец получает скорость 3,
   # но также теперь игрок может в течение 2 минут нажимая ЛКМ выстреливать сверхбыстрыми стрелами
   # (Обычные партиклы без стрел, но если попадают то наносят урон в размере 1 сердце)
-
-elf_king:
-  gui_config:
-    name: "Высший эльф"
-    lore: ""
-    icon: "MACE"
-  max_hp: 18
-  exclude_from_random: true
-  effects_with:
-    in_biome:
-      - biomes:
-          - forest
-          - birch_forest
-          - taiga
-        effects:
-          speed: 2
-          regeneration: 1
-      - biomes:
-          - deep_dark
-          - pale_garden
-          - dark_forest
-        effects:
-          nausea: 1
-          blindness: 1
-  forbidden_foods:
-    - COOKED_BEEF
-    - COOKED_PORK
-    - COOKED_MUTTON
-    - COOKED_CHICKEN
-  weapon_proficiency:
-    bow_damage_multiplier: 1.5
-    bow_projectile_speed_multiplier: 1.5
-
-  #Способности:
-  #
-  #Дух леса:
-  #КД- 8 минут
-  #Длительность: 2 минуты
-  #При использование, наклыдывает на владельца:
-  #Регенерация 2
-  #Ночное зрение
-  #Сопротивление 2
-  #
-  #Кровь первых:
-  #Кд- 15 минут
-  #Длительность 2 минуты
-  #При использование владелец получает скорость 3, но также теперь игрок может в течение 2 минут нажимая ЛКМ выстреливать сверхбыстрыми стрелами (Обычные партиклы без стрел, но если попадают то наносят урон в размере 1 сердце)
-  #
-  #Мастер леса:
-  #Длительность 30 секунд
-  #Область 3x3
-  #КД 30 минут
-  #При использование владелец создаёт под собой область 3x3 в которой любой игрок получает регенерацию 2, а также насыщенность.
-
-эльфСВ_Альвы:
-  gui_config:
-    name: "Эльф Альва"
-    lore: ""
-    icon: "MACE"
-  max_hp: 22
-  mana_regeneration_modifiers:
-    - multiplier: 1.15
-  exclude_from_random: true
-  weapon_proficiency:
-    sword_damage_multiplier: 0.8
-    axe_damage_multiplier: 0.8
-
-ЭльфСВ_Высший эльф:
-  gui_config:
-    name: "Высший Эльф"
-    lore: ""
-    icon: "MACE"
-  max_hp: 30
-  mana_regeneration_modifiers:
-    - multiplier: 1.4
-  effects_with:
-    in_world:
-      - world: the_nether
-        effects:
-          nausea: 2 #20 сек, КД — 3 мин
-          blindness: 1 #5 сек, КД — 1 мин
-  exclude_from_random: true
-
-  weapon_proficiency:
-    sword_damage_multiplier: 0.8
-    axe_damage_multiplier: 0.8
-
-ЭльфЛВ_Нандор:
-  gui_config:
-    name: "Элфь Нандор"
-    lore: ""
-    icon: "MACE"
-  max_hp: 20
-  exclude_from_random: true
-  effects_with:
-    in_biome:
-      - biomes:
-          - forest
-          - birch_forest
-          - taiga
-          - dark_forest
-          - flower_forest
-          - jungle
-          - grove
-          - cherry_grove
-          - bamboo_jungle
-        effects:
-          speed: 1
-          jump_boost: 1
-  weapon_proficiency:
-    sword_damage_multiplier: 0.8
-    axe_damage_multiplier: 0.8
-
-ЭльфЛВ_Сильван:
-  gui_config:
-    name: "Элфь Сильван"
-    lore: ""
-    icon: "MACE"
-  max_hp: 20
-  exclude_from_random: true
-  effects_with:
-    in_biome:
-      - biomes:
-          - forest
-          - birch_forest
-          - taiga
-          - dark_forest
-          - flower_forest
-          - jungle
-          - grove
-          - cherry_grove
-          - bamboo_jungle
-        effects:
-          speed: 1
-          jump_boost: 1
-
-        #снижение урона от падения (на 10%)
-  weapon_proficiency:
-    sword_damage_multiplier: 0.8
-    axe_damage_multiplier: 0.8
 
