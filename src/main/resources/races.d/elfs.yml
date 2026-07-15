@@ -178,15 +178,22 @@ dark_elf:
     mace_damage_multiplier: 1.1
 
   abilities:
-    - dark_elf_arsenal
+    - arsenal
 
 drow:
+  category: "elf"
+
   gui_config:
-    name: "Дроу"
-    lore: ""
+    name: "§8Дроу"
+    lore: "§8Тёмные эльфы глубин, мастера яда и засад.\n\n§eБонусы:\n§7»  Скорость III в глубинах.\n§7»  Регенерация II в глубинах.\n§7»  Усиленные стрелы тьмы.\n§7»  Доступны уникальные способности.\n\n§cМинусы:\n§7»  Получает урон от исцеления и регенерации.\n§7»  Слабость вдали от тьмы.\n\n§7Способности:\n§7»  Арсенал (КД 5 минут).\n§7»  Обстрел (КД 10 минут).\n\n§7Для выбора нажмите: §f[ПКМ]"
     icon: "MACE"
+
   max_hp: 12
-  exclude_from_random: true
+
+  abilities:
+    - arsenal
+    - barrage
+
   effects_with:
     in_biome:
       - biomes:
@@ -196,23 +203,11 @@ drow:
           speed: 3
           regeneration: 2
 
-  #Минусы:
-  #Получает урон от зелья исцеления и регенарации
-  #
-  #Способности:
-  #
-  #Арсенал
-  #Кд 5 минут
-  #При использование выдаёт 16 штук одних из стрел:
-  #Отравление 2
-  #Тошнота 2
-  #Замедление 2
-  #Слепота 2
-  #
-  #Обстрел:
-  #Кд 10 минут
-  #При использование с неба летят стрелы разных дебаффов
-  #Радиус обстрела 5 на 5 блоков
+  weapon_proficiency:
+    bow_damage_multiplier: 1.25
+    bow_projectile_speed_multiplier: 1.25
+
+  exclude_from_random: true
 
 dark_elf_king:
   gui_config:
