@@ -230,51 +230,67 @@ drow:
 
 
 ancient_elf:
+  category: "elf"
+
   gui_config:
-    name: "Эльф кровавой луны"
-    "
-    lore: ""
-    icon: "MACE"
+    name: "§dЭльф кровавой луны"
+    lore: "§dДревняя ветвь эльфов, чья кровь связана с силой луны.\n\n§eБонусы:\n§7»  Восстановление маны +30%.\n§7»  Усиленный урон из лука.\n§7»  Скорость и регенерация в природных местах.\n§7»  Ночное зрение в тёмных местах.\n\n§cМинусы:\n§7»  Не может есть мясо.\n§7»  Слабее в ближнем бою.\n§7»  Тёмные искажённые места вызывают слабость.\n\n§dСпособности:\n§7»  Дух леса.\n§7»  Кровь первых.\n\n§7Для выбора нажмите: §f[ПКМ]"
+    icon: "AMETHYST_SHARD"
+
   max_hp: 14
+
   exclude_from_random: true
+
+
   effects_with:
+
     in_biome:
+
       - biomes:
-      
+          - forest
+          - birch_forest
+          - taiga
+          - dark_forest
+          - flower_forest
+          - cherry_grove
         effects:
           speed: 2
           regeneration: 1
+
+
       - biomes:
           - deep_dark
           - pale_garden
-          - dark_forest
         effects:
           nausea: 1
           blindness: 1
+
+
+  weapon_proficiency:
+
+    bow_damage_multiplier: 1.15
+    bow_projectile_speed_multiplier: 1.25
+
+    sword_damage_multiplier: 0.85
+    axe_damage_multiplier: 0.85
+    mace_damage_multiplier: 0.85
+
+
+  mana_regeneration_modifiers:
+
+    - condition: "ALWAYS"
+      multiplier: 1.30
+
+
   forbidden_foods:
+
     - COOKED_BEEF
     - COOKED_PORK
     - COOKED_MUTTON
     - COOKED_CHICKEN
-  weapon_proficiency:
-    bow_damage_multiplier: 1.15
-    bow_projectile_speed_multiplier: 1.15
 
 
-  #Способности:
-  #
-  #Дух леса:
-  #КД- 9 минут
-  #Длительность: 2 минуты
-  #При использование, наклыдывает на владельца:
-  #Регенерация 2
-  #Ночное зрение
-  #Сопротивление 2
-  #
-  #Кровь первых:
-  #Кд- 15 минут
-  #Длительность 2 минуты
-  #При использование владелец получает скорость 3,
-  # но также теперь игрок может в течение 2 минут нажимая ЛКМ выстреливать сверхбыстрыми стрелами
-  # (Обычные партиклы без стрел, но если попадают то наносят урон в размере 1 сердце)
+  abilities:
 
+    - forest_spirit
+    - first_blood
