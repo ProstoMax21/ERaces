@@ -10,15 +10,18 @@ object GuiManager {
 
     private val openMenus = mutableMapOf<UUID, GuiBase>()
 
-    fun getOpenMenu(player: Player): GuiBase? = openMenus[player.name]
+    fun getOpenMenu(player: Player): GuiBase? {
+        return openMenus[player.uniqueId]
+    }
 
     fun setOpenMenu(player: Player, menu: GuiBase) {
-        openMenus[player.name] = menu
+        openMenus[player.uniqueId] = menu
     }
 
     fun close(player: Player) {
-        openMenus.remove(player.name)
+        openMenus.remove(player.uniqueId)
     }
 
-    internal val allOpen: Map<String, GuiBase> get() = openMenus
+    internal val allOpen: Map<UUID, GuiBase>
+        get() = openMenus
 }
