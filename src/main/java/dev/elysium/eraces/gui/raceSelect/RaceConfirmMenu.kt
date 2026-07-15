@@ -28,25 +28,25 @@ class RaceConfirmMenu(
             GuiManager.getOpenMenu(player)?.preventClose = false
             GuiManager.close(player)
 
-            // Сохраняем расу
+            player.actionMsg("<green>Ты выбрал расу: <gold>${race.displayName}")
+
             ERaces.getInstance()
                 .context
                 .playerDataManager
-                .setPlayerRace(player, race.id)
+                .setPlayerRaceAsync(player, race.id)
+                .thenRun {
 
-            RacesReloader.reloadRaceForPlayer(player)
-            VisualsManager.updateVisualsForPlayer(player)
+                    Bukkit.getScheduler().runTask(
+                        ERaces.getInstance(),
+                        Runnable {
 
-            player.actionMsg("<green>Ты выбрал расу: <gold>${race.displayName}")
+                            RacesReloader.reloadRaceForPlayer(player)
+                            VisualsManager.updateVisualsForPlayer(player)
 
-            // Закрытие с задержкой для Bedrock/Geyser
-            Bukkit.getScheduler().runTaskLater(
-                ERaces.getInstance(),
-                Runnable {
-                    player.closeInventory()
-                },
-                1L
-            )
+                            player.closeInventory()
+                        }
+                    )
+                }
         })
 
 
@@ -59,11 +59,10 @@ class RaceConfirmMenu(
                 ERaces.getInstance(),
                 Runnable {
                     player.closeInventory()
+                    RaceSelectMenu(player).open()
                 },
                 1L
             )
-
-            RaceSelectMenu(player).open()
         })
     }
 }
