@@ -1,17 +1,17 @@
 package dev.elysium.eraces.listeners
 
 import dev.elysium.eraces.ERaces
-import org.bukkit.Bukkit
+import dev.elysium.eraces.utils.EffectUtils
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerMoveEvent
-import org.bukkit.scheduler.BukkitRunnable
 
 object RaceEffectListener : Listener {
 
     private val plugin = ERaces.getInstance()
+
 
     @EventHandler
     fun onJoin(event: PlayerJoinEvent) {
@@ -22,12 +22,13 @@ object RaceEffectListener : Listener {
     @EventHandler
     fun onMove(event: PlayerMoveEvent) {
 
-        // Чтобы не нагружать сервер при каждом повороте головы
+        // Не обновляем при повороте головы
         if (
             event.from.blockX == event.to.blockX &&
             event.from.blockY == event.to.blockY &&
             event.from.blockZ == event.to.blockZ
         ) return
+
 
         applyRaceEffects(event.player)
     }
@@ -71,6 +72,7 @@ object RaceEffectListener : Listener {
         }
 
 
+
         /*
          * Свет
          */
@@ -78,6 +80,7 @@ object RaceEffectListener : Listener {
         for (light in effects.effectsWithLights) {
 
             val block = player.location.block
+
 
             val lightLevel = when(light.lightType.lowercase()) {
 
@@ -106,6 +109,7 @@ object RaceEffectListener : Listener {
         }
 
 
+
         /*
          * Мир
          */
@@ -128,25 +132,33 @@ object RaceEffectListener : Listener {
     }
 
 
+
     private fun addEffect(
         player: Player,
         effect: String,
         amplifier: Int
     ) {
 
-        val type = Bukkit.getPotionEffectType(
-            org.bukkit.NamespacedKey.minecraft(effect)
-        ) ?: return
+        try {
 
+            val type = EffectUtils.getPotionEffectType(effect)
 
-        player.addPotionEffect(
-            org.bukkit.potion.PotionEffect(
-                type,
-                60,
-                amplifier - 1,
-                false,
-                false
+            player.addPotionEffect(
+                org.bukkit.potion.PotionEffect(
+                    type,
+                    60,
+                    amplifier - 1,
+                    false,
+                    false
+                )
             )
-        )
+
+        } catch (e: Exception) {
+
+            plugin.logger.warning(
+                "Не удалось применить эффект $effect: ${e.message}"
+            )
+
+        }
     }
 }
