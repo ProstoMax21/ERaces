@@ -23,16 +23,12 @@ class RaceSelectMenu(player: Player) : GuiBase(player, "Выбор расы") {
     override fun setup() {
 
 
-        val categories = RaceSelectMenuPages.pages
-
+        val categories = RaceSelectMenuPages.categories
 
 
         if (categories.isEmpty()) {
-
             RaceSelectMenuPages.loadFromConfig()
-
         }
-
 
 
         if (categories.isEmpty()) {
@@ -47,13 +43,7 @@ class RaceSelectMenu(player: Player) : GuiBase(player, "Выбор расы") {
         }
 
 
-
         clearButtons()
-
-
-
-        if (currentCategory < 0)
-            currentCategory = 0
 
 
 
@@ -61,24 +51,28 @@ class RaceSelectMenu(player: Player) : GuiBase(player, "Выбор расы") {
             currentCategory = categories.size - 1
 
 
-
         val category = categories[currentCategory]
 
 
 
-        // Заголовок категории
+        // Название категории
 
         setButton(
             4,
             GuiButton.of(
                 Material.NETHER_STAR,
-                "<gold>${category.name}"
+                "<gold>${category.displayName}"
             ) {}
         )
 
 
 
-        // Расстановка рас
+        /*
+         * Расы в один ряд
+         *
+         * Слоты:
+         * 10 11 12 13 14 15 16
+         */
 
         var slot = 10
 
@@ -86,14 +80,8 @@ class RaceSelectMenu(player: Player) : GuiBase(player, "Выбор расы") {
         for (race in category.races) {
 
 
-            while (
-                slot == 17 ||
-                slot == 26 ||
-                slot == 35
-            ) {
-                slot++
-            }
-
+            if (slot > 16)
+                break
 
 
             setButton(
@@ -115,11 +103,9 @@ class RaceSelectMenu(player: Player) : GuiBase(player, "Выбор расы") {
 
 
 
-
-        // Предыдущая категория
+        // Назад
 
         if (currentCategory > 0) {
-
 
             setButton(
                 45,
@@ -138,11 +124,9 @@ class RaceSelectMenu(player: Player) : GuiBase(player, "Выбор расы") {
 
 
 
-
-        // Следующая категория
+        // Вперёд
 
         if (currentCategory < categories.size - 1) {
-
 
             setButton(
                 53,
