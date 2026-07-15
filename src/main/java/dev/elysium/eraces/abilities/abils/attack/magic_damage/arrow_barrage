@@ -1,0 +1,73 @@
+package dev.elysium.eraces.abilities.abils.attack.magic_damage
+
+import dev.elysium.eraces.abilities.RegisterAbility
+import dev.elysium.eraces.abilities.abils.base.BaseCooldownAbility
+import org.bukkit.Location
+import org.bukkit.entity.Arrow
+import org.bukkit.entity.Player
+import org.bukkit.potion.PotionEffect
+import org.bukkit.potion.PotionEffectType
+import org.bukkit.configuration.file.YamlConfiguration
+import kotlin.random.Random
+
+@RegisterAbility
+class ArrowBarrageAbility : BaseCooldownAbility(
+    id = "arrow_barrage",
+    defaultCooldown = "10m"
+) {
+
+    private var radius = 2 // 5x5 область
+    private var height = 15
+    private var effects = listOf(
+        PotionEffectType.POISON,
+        PotionEffectType.BLINDNESS,
+        PotionEffectType.SLOWNESS
+    )
+
+    override fun onActivate(player: Player) {
+
+        val center = player.location
+
+        for (x in -radius..radius) {
+            for (z in -radius..radius) {
+
+                val spawn = center.clone().add(
+                    x.toDouble(),
+                    height.toDouble(),
+                    z.toDouble()
+                )
+
+                val arrow = player.world.spawn(
+                    spawn,
+                    Arrow::class.java
+                )
+
+                arrow.shooter = player
+
+                arrow.velocity = center.clone()
+                    .subtract(spawn)
+                    .toVector()
+                    .normalize()
+                    .multiply(1.5)
+
+                // случайный дебафф
+                val effect = effects.random()
+
+                arrow.addCustomEffect(
+                    PotionEffect(
+                        effect,
+                        100, // 5 секунд
+                        1
+                    ),
+                    true
+                )
+            }
+        }
+    }
+
+    override fun loadCustomParams(cfg: YamlConfiguration) {
+    }
+
+    override fun writeCustomDefaults(cfg: YamlConfiguration) {
+    }
+}
