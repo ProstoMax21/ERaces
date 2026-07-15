@@ -5,20 +5,43 @@ import dev.elysium.eraces.exceptions.internal.InitFailedException
 import dev.elysium.eraces.listeners.GuiListener
 import dev.elysium.eraces.listeners.PluginMessageListener
 import dev.elysium.eraces.listeners.RaceSelectListener
+import dev.elysium.eraces.listeners.RaceEffectListener
 import org.bukkit.Bukkit
 
 class ListenerInitializer : IInitializer {
+
     override fun setup(plugin: ERaces) {
         try {
-            Bukkit.getPluginManager().registerEvents(RaceSelectListener, plugin)
+
+            Bukkit.getPluginManager()
+                .registerEvents(RaceSelectListener, plugin)
+
             plugin.server.messenger
-                .registerIncomingPluginChannel(plugin, "elysium:eraces_cast", PluginMessageListener())
-            plugin.server.messenger.registerOutgoingPluginChannel(plugin, "elysium:eraces_cast")
+                .registerIncomingPluginChannel(
+                    plugin,
+                    "elysium:eraces_cast",
+                    PluginMessageListener()
+                )
+
+            plugin.server.messenger
+                .registerOutgoingPluginChannel(
+                    plugin,
+                    "elysium:eraces_cast"
+                )
 
             GuiListener.init(plugin)
-            Bukkit.getPluginManager().registerEvents(GuiListener, plugin)
+
+            Bukkit.getPluginManager()
+                .registerEvents(GuiListener, plugin)
+
+            Bukkit.getPluginManager()
+                .registerEvents(RaceEffectListener, plugin)
+
         } catch (e: Exception) {
-            throw InitFailedException("Ошибка при регистрации слушателей", e)
+            throw InitFailedException(
+                "Ошибка при регистрации слушателей",
+                e
+            )
         }
     }
 }
