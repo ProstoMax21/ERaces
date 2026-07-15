@@ -28,17 +28,22 @@ asir:
     - condition: "ALWAYS"
       multiplier: 1.10  # +10% восстановление маны
 
-vaniar:
-  gui_config:
+   vaniar:
+    category: "elf"
+
+   gui_config:
     name: "§fЭльфСВ/Ваниар"
     lore: "§fВысшие эльфы, наделённые светом.\n\n§eБонусы:\n§7»  Восстановление маны +30%.\n§7»  Скорость атаки +15%.\n§7»  Скорость полёта стрелы +30%.\n\n§cМинусы:\n§7»  Эффект замерзания в зимних биомах.\n§7»  −15% урона от ближнего оружия.\n§7»  В аду: тошнота (20 сек, КД 3 мин), слепота (5 сек, КД 1 мин).\n\n§7Для выбора нажмите: §f[ПКМ]"
     icon: "SPECTRAL_ARROW"
+
   max_hp: 26
+
   weapon_proficiency:
-    sword_damage_multiplier: 0.85  # -15% урона от меча
-    axe_damage_multiplier: 0.85    # -15% урона от топора
-    mace_damage_multiplier: 0.85   # -15% урона от булавы
-    bow_projectile_speed_multiplier: 1.3  # +30% скорость полёта стрелы
+    sword_damage_multiplier: 0.85
+    axe_damage_multiplier: 0.85
+    mace_damage_multiplier: 0.85
+    bow_projectile_speed_multiplier: 1.3
+
   effects_with:
     in_biome:
       - biomes:
@@ -49,38 +54,36 @@ vaniar:
           - snowy_beach
           - frozen_ocean
         effects:
-          slowness: 1  # Эффект замерзания в зимних биомах
-      - biomes:
-          - nether_wastes
-          - basalt_deltas
-          - crimson_forest
-          - warped_forest
-          - soul_sand_valley
+          slowness: 1
+
+    in_world:
+      - world: the_nether
         effects:
-          nausea:
-            # amplifier: 0 TODO: реализовать
-            # duration: 20  20 сек TODO: реализовать
-            # cooldown: 180   3 мин TODO: реализовать
-          blindness:
-            # amplifier: 0  TODO: реализовать
-            # duration: 5   5 сек TODO: реализовать
-            # cooldown: 60   1 мин TODO: реализовать
-  attack_speed_multiplier: 1.15  # +15% скорость атаки
+          nausea: 1
+          blindness: 1
+
+  attack_speed_multiplier: 1.15
+
   mana_regeneration_modifiers:
     - condition: "ALWAYS"
-      multiplier: 1.30  # +30% восстановление маны
+      multiplier: 1.30
 
 sun_elf:
+  category: "elf"
+
   gui_config:
     name: "§eСолнечный эльф"
     lore: "§eДети солнца, сильные и быстрые.\n\n§eБонусы:\n§7»  Восстановление маны +25%.\n§7»  Скорость атаки +15%.\n§7»  Скорость полета стрелы лука +30%.\n\n§cМинусы:\n§7»  Эффект замерзания в зимних биомах.\n§7»  −20% урона от ближнего оружия.\n§7»  В аду: тошнота (20 сек, КД 3 мин), слепота (3 сек, КД 1 мин).\n\n§7Для выбора нажмите: §f[ПКМ]"
     icon: "SUNFLOWER"
+
   max_hp: 24
+
   weapon_proficiency:
-    sword_damage_multiplier: 0.8  # -20% урона от меча
-    axe_damage_multiplier: 0.8    # -20% урона от топора
-    mace_damage_multiplier: 0.8   # -20% урона от булавы
-    bow_projectile_speed_multiplier: 1.3  # +30% скорость полета стрелы
+    sword_damage_multiplier: 0.8
+    axe_damage_multiplier: 0.8
+    mace_damage_multiplier: 0.8
+    bow_projectile_speed_multiplier: 1.3
+
   effects_with:
     in_biome:
       - biomes:
@@ -91,50 +94,75 @@ sun_elf:
           - snowy_beach
           - frozen_ocean
         effects:
-          slowness: 1  # Эффект замерзания в зимних биомах
-      - biomes:
-          - nether_wastes
-          - basalt_deltas
-          - crimson_forest
-          - warped_forest
-          - soul_sand_valley
+          slowness: 1
+
+    in_world:
+      - world: the_nether
         effects:
           nausea: 1
-            # amplifier: 0
-            # duration: 400   # 20 сек TODO: реализовать
-            # cooldown: 3600  # 3 мин TODO: реализовать
           blindness: 1
-            # amplifier: 0
-            # duration: 60    # 3 сек TODO: реализовать
-            # cooldown: 120   # 1 мин TODO: реализовать
-  attack_speed_multiplier: 1.15  # +15% скорость атаки
+
+  attack_speed_multiplier: 1.15
+
   mana_regeneration_modifiers:
     - condition: "ALWAYS"
-      multiplier: 1.25  # +25% восстановление маны
+      multiplier: 1.25
 
 elf:
+  category: "elf"
+
   gui_config:
     name: "§aЭльф"
     lore: "§aЛесной народ, в гармонии с природой.\n\n§eБонусы:\n§7»  Скорость II в лесах и равнинах.\n§7»  Удвоенный урон и скорость стрел из лука.\n§7»  Метаболизм: расход голода на 25% меньше.\n\n§cМинусы:\n§7»  Только 15 HP (7.5 сердечек).\n§7»  Штраф за ношение брони выше железной — замедление I.\n§7»  Не может есть мясо (вегетарианец).\n§7»  Урон ближнего боя x0.5.\n\n§7Для выбора нажмите: §f[ПКМ]"
     icon: "OAK_SAPLING"
-  max_hp: 20
-  mana_regeneration_modifiers:
-    - multiplier: 1.1
+
+  max_hp: 15
+
+  hunger_loss_multiplier: 0.75
+
+  slowness_with_iron_and_more_armor: 1
+
+  forbidden_foods:
+    - COOKED_BEEF
+    - COOKED_PORKCHOP
+    - COOKED_MUTTON
+    - COOKED_CHICKEN
+    - RABBIT_STEW
+
   weapon_proficiency:
-    sword_damage_multiplier: 0.75
-    axe_damage_multiplier: 0.75
+    sword_damage_multiplier: 0.5
+    axe_damage_multiplier: 0.5
+    mace_damage_multiplier: 0.5
+    bow_damage_multiplier: 2.0
+    bow_projectile_speed_multiplier: 2.0
 
+  effects_with:
+    in_biome:
+      - biomes:
+          - forest
+          - birch_forest
+          - taiga
+          - plains
+          - sunflower_plains
+        effects:
+          speed: 2
 
-    #Скорость атаки +15%(в принципе нету)
-    #Эффект замерзания в зимних биомах
-
+  mana_regeneration_modifiers:
+    - condition: "ALWAYS"
+      multiplier: 1.10
 
 dark_elf:
+  category: "elf"
+
   gui_config:
-    name: "Тёмный эльф"
-    lore: ""
+    name: "§5Тёмный эльф"
+    lore: "§5Народ тьмы, привыкший к глубинам мира.\n\n§eБонусы:\n§7»  Скорость II и регенерация в глубинах.\n§7»  Усиленное восстановление здоровья в тёмных местах.\n\n§cМинусы:\n§7»  Урон от зелий исцеления и регенерации.\n§7»  Слабость к светлой магии.\n\n§dСпособности:\n§7»  Арсенал — призывает специальные стрелы с эффектами.\n§7КД: 5 минут.\n\n§7Для выбора нажмите: §f[ПКМ]"
     icon: "MACE"
+
   max_hp: 12
+
+  exclude_from_random: true
+
   effects_with:
     in_biome:
       - biomes:
@@ -143,20 +171,14 @@ dark_elf:
         effects:
           speed: 2
           regeneration: 1
-  exclude_from_random: true
 
-  #Минусы:
-  #Получает урон от зелья исцеления и регенарации
-  #
-  #Способности:
-  #
-  #Арсенал
-  #Кд 5 минут
-  #При использование выдаёт 16 штук одних из стрел:
-  #Отравление 1
-  #Тошнота 1
-  #Замедление 1
-  #Слепота 1
+  weapon_proficiency:
+    sword_damage_multiplier: 1.1
+    axe_damage_multiplier: 1.1
+    mace_damage_multiplier: 1.1
+
+  abilities:
+    - dark_elf_arsenal
 
 drow:
   gui_config:
