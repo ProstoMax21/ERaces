@@ -1,6 +1,7 @@
 package dev.elysium.eraces.gui.core
 
 import org.bukkit.entity.Player
+import java.util.UUID
 
 /**
  * Отслеживает открытые меню игроков.
