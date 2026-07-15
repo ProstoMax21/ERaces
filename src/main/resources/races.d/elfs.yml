@@ -233,8 +233,8 @@ ancient_elf:
   category: "elf"
 
   gui_config:
-    name: "§dЭльф кровавой луны"
-    lore: "§dДревняя ветвь эльфов, чья кровь связана с силой луны.\n\n§eБонусы:\n§7»  Восстановление маны +30%.\n§7»  Усиленный урон из лука.\n§7»  Скорость и регенерация в природных местах.\n§7»  Ночное зрение в тёмных местах.\n\n§cМинусы:\n§7»  Не может есть мясо.\n§7»  Слабее в ближнем бою.\n§7»  Тёмные искажённые места вызывают слабость.\n\n§dСпособности:\n§7»  Дух леса.\n§7»  Кровь первых.\n\n§7Для выбора нажмите: §f[ПКМ]"
+    name: "§5Эльф кровавой луны"
+    lore: "§5Древний народ, связанный с силой луны и кровью первых эльфов.\n\n§eБонусы:\n§7»  Урон из лука +15%.\n§7»  Скорость полёта стрел +15%.\n§7»  В лесах: Скорость II.\n§7»  В тёмных местах: Ночное зрение.\n\n§cМинусы:\n§7»  Урон от солнечного света.\n§7»  Не может есть мясо.\n§7»  В тёмных лесах получает слабость.\n\n§dСпособности:\n§7» Дух леса.\n§7» Кровь первых.\n\n§7Для выбора нажмите: §f[ПКМ]"
     icon: "AMETHYST_SHARD"
 
   max_hp: 14
@@ -244,6 +244,7 @@ ancient_elf:
 
   effects_with:
 
+    # Лесная связь
     in_biome:
 
       - biomes:
@@ -252,45 +253,46 @@ ancient_elf:
           - taiga
           - dark_forest
           - flower_forest
-          - cherry_grove
         effects:
           speed: 2
           regeneration: 1
 
 
+      # Тёмные места
       - biomes:
           - deep_dark
           - pale_garden
         effects:
-          nausea: 1
-          blindness: 1
+          night_vision: 1
 
 
-  weapon_proficiency:
+    # Ненависть к солнцу
+    at_light:
 
-    bow_damage_multiplier: 1.15
-    bow_projectile_speed_multiplier: 1.25
+      - light_type: "sky"
+        min: 12
+        max: 15
+        effects:
+          weakness: 1
 
-    sword_damage_multiplier: 0.85
-    axe_damage_multiplier: 0.85
-    mace_damage_multiplier: 0.85
-
-
-  mana_regeneration_modifiers:
-
-    - condition: "ALWAYS"
-      multiplier: 1.30
 
 
   forbidden_foods:
-
     - COOKED_BEEF
     - COOKED_PORK
     - COOKED_MUTTON
     - COOKED_CHICKEN
 
 
+
+  weapon_proficiency:
+
+    bow_damage_multiplier: 1.15
+
+    bow_projectile_speed_multiplier:
+      1.15
+
   abilities:
 
-    - forest_spirit
-    - first_blood
+    - forestchild
+    - blood_of_first
