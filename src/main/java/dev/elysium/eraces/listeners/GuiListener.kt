@@ -15,6 +15,7 @@ import org.bukkit.event.player.PlayerQuitEvent
  * Слушатель событий для GUI-меню.
  */
 object GuiListener : Listener {
+
     lateinit var plugin: ERaces
 
     fun init(plugin: ERaces) {
@@ -26,44 +27,69 @@ object GuiListener : Listener {
      */
     @EventHandler(priority = EventPriority.HIGH)
     fun onInventoryClick(event: InventoryClickEvent) {
+
         val player = event.whoClicked as? Player ?: return
+
         val menu = GuiManager.getOpenMenu(player) ?: return
+
+        // Игнорируем клики вне открытого GUI
+        if (event.inventory != menu.inv) {
+            return
+        }
 
         event.isCancelled = true
 
         menu.handleClick(event)
     }
 
+
     /**
      * Убирает меню из менеджера при закрытии инвентаря.
      */
     @EventHandler(priority = EventPriority.HIGH)
     fun onInventoryClose(event: InventoryCloseEvent) {
+
         val player = event.player as? Player ?: return
+
         val menu = GuiManager.getOpenMenu(player) ?: return
+
 
         if (menu.isReopened) {
             menu.isReopened = false
             return
         }
 
-        if (menu.preventClose) {
-            menu.closeMessage?.let { player.actionMsg(it) }
 
-            player.server.scheduler.runTaskLater(plugin, Runnable {
-                menu.open(true)
-            }, 1L)
+        if (menu.preventClose) {
+
+            menu.closeMessage?.let {
+                player.actionMsg(it)
+            }
+
+
+            player.server.scheduler.runTaskLater(
+                plugin,
+                Runnable {
+                    menu.open(true)
+                },
+                1L
+            )
+
         } else {
+
             GuiManager.close(player)
+
         }
     }
 
+
     /**
-     * Закрывает GUI после выхода игрока с сервера
+     * Закрывает GUI после выхода игрока.
      */
     @EventHandler(priority = EventPriority.HIGH)
     fun onPlayerLeave(event: PlayerQuitEvent) {
-        val player = event.player
-        GuiManager.close(player)
+
+        GuiManager.close(event.player)
+
     }
 }
